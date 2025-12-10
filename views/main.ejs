@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SNS Main</title>
+</head>
+<body>
+    <h1>Welcome, <%= user %></h1> <a href="/newpost">Create New Post</a> | <a href="/logout">Logout</a>
+
+    <hr>
+
+    <div class="feed">
+        <% posts.forEach(post => { %>
+            <div class="post" style="border: 1px solid #ccc; margin: 10px; padding: 10px;">
+                <h3>Author: <%= post.author %></h3>
+                <p><%= post.content %></p>
+                <small>Posted at: <%= post.createdAt %></small>
+                
+                <br>
+                <button>Like (<%= post.likes %>)</button> <form action="/deletePost" method="POST" style="display:inline;">
+                    <input type="hidden" name="postId" value="<%= post._id %>">
+                    <button type="submit">Delete</button>
+                </form>
+            </div>
+        <% }) %>
+    </div>
+</body>
+</html>
