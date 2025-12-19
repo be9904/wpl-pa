@@ -1,25 +1,108 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>SNS Main</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Feed - SNS App</title>
+    <style>
+        /* Consistent style with Signup/Login pages */
+        body { 
+            font-family: sans-serif; 
+            max-width: 600px; 
+            margin: 2rem auto; 
+            padding: 1rem; 
+            background-color: white; 
+            color: black;
+        }
+        h1 { border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .nav { margin-bottom: 20px; }
+        .nav a { 
+            text-decoration: none; 
+            color: #007BFF; 
+            font-weight: bold; 
+            margin-right: 15px; 
+        }
+        .post { 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            padding: 15px; 
+            margin-bottom: 20px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .post-header { 
+            display: flex; 
+            justify-content: space-between; 
+            margin-bottom: 10px; 
+            color: #555; 
+            font-size: 0.9em; 
+        }
+        .post-content { 
+            font-size: 1.1em; 
+            margin-bottom: 15px; 
+            line-height: 1.5; 
+        }
+        .post-actions { 
+            display: flex; 
+            gap: 10px; 
+            align-items: center; 
+        }
+        button.btn-like { 
+            background-color: #e7f3ff; 
+            color: #007BFF; 
+            border: 1px solid #007BFF; 
+            padding: 5px 10px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+        }
+        button.btn-delete { 
+            background-color: #ffe6e6; 
+            color: #d8000c; 
+            border: 1px solid #d8000c; 
+            padding: 5px 10px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome, <%= user %></h1> <a href="/newpost">Create New Post</a> | <a href="/logout">Logout</a>
+    <h1>Welcome, <%= user.id %></h1>
 
-    <hr>
+    <div class="nav">
+        <a href="/newpost">+ Create New Post</a>
+        <a href="/logout" style="color: #666;">Logout</a>
+    </div>
 
     <div class="feed">
+        <% if (posts.length === 0) { %>
+            <p>No posts yet. Be the first to share something!</p>
+        <% } %>
+
         <% posts.forEach(post => { %>
-            <div class="post" style="border: 1px solid #ccc; margin: 10px; padding: 10px;">
-                <h3>Author: <%= post.author %></h3>
-                <p><%= post.content %></p>
-                <small>Posted at: <%= post.createdAt %></small>
-                
-                <br>
-                <button>Like (<%= post.likes %>)</button> <form action="/deletePost" method="POST" style="display:inline;">
-                    <input type="hidden" name="postId" value="<%= post._id %>">
-                    <button type="submit">Delete</button>
-                </form>
+            <div class="post">
+                <div class="post-header">
+                    <strong>@<%= post.author %></strong>
+                    <span><%= new Date(post.createdAt).toLocaleString() %></span>
+                </div>
+
+                <div class="post-content">
+                    <%= post.content %>
+                </div>
+
+                <div class="post-actions">
+                    <form action="/likePost" method="POST" style="display:inline;">
+                        <input type="hidden" name="postId" value="<%= post._id %>">
+                        <button type="submit" class="btn-like">
+                            ♥ Like (<%= post.likes %>)
+                        </button>
+                    </form>
+
+                    <% if (user.id === post.author || user.roles.includes('admin')) { %>
+                        <form action="/deletePost" method="POST" style="display:inline;">
+                            <input type="hidden" name="postId" value="<%= post._id %>">
+                            <button type="submit" class="btn-delete">Delete</button>
+                        </form>
+                    <% } %>
+                </div>
             </div>
         <% }) %>
     </div>
