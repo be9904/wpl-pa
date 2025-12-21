@@ -3,7 +3,7 @@ body {
     max-width: 600px;
     margin: 2rem auto;
     padding: 1rem;
-    background-color: white; /* Explicit requirement */
+    background-color: white;
     color: black;
 }
 
@@ -18,9 +18,9 @@ a:hover {
 h1, h2 {
     border-bottom: 2px solid #eee;
     padding-bottom: 10px;
+    text-align: center;
 }
 
-/* --- Forms (Login, Signup, New Post) --- */
 label {
     display: block;
     margin-top: 10px;
@@ -59,7 +59,17 @@ button:hover {
     background-color: #0056b3;
 }
 
-/* --- Error Indicators --- */
+.form-actions {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;            
+    margin-top: 10px;
+}
+.form-actions button {
+    margin-top: 0; 
+    width: auto; 
+}
+
 .error, .error-indicator {
     color: #721c24;
     background-color: #f8d7da;
@@ -70,13 +80,24 @@ button:hover {
     text-align: center;
 }
 
-/* --- Main Feed Specifics --- */
 .nav {
+    display: flex;                  
+    justify-content: space-between; 
+    align-items: center;            
     margin-bottom: 20px;
+    padding-bottom: 10px;           
 }
+
 .nav a {
-    margin-right: 15px;
+    text-decoration: none;
     font-weight: bold;
+}
+.nav-link {
+    font-weight: bold;
+    text-decoration: none;
+}
+.nav-link:hover {
+    text-decoration: underline;
 }
 
 .post {
@@ -104,17 +125,16 @@ button:hover {
 .post-actions {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* <--- This pushes Delete to the right */
-    margin-top: 15px;               /* Add some spacing from the text */
+    justify-content: space-between; 
+    margin-top: 15px;               
 }
 
-/* Specific Button Styles */
 button.btn-like {
     background-color: #e7f3ff;
     color: #007BFF;
     border: 1px solid #007BFF;
     padding: 5px 10px;
-    margin-top: 0; /* Reset global margin */
+    margin-top: 0; 
 }
 
 button.btn-delete {
@@ -122,5 +142,5 @@ button.btn-delete {
     color: #d8000c;
     border: 1px solid #d8000c;
     padding: 5px 10px;
-    margin-top: 0; /* Reset global margin */
+    margin-top: 0; 
 }

@@ -46,9 +46,10 @@
                     </form>
 
                     <% if (user.id === post.author || user.roles.includes('admin')) { %>
-                        <form action="/deletePost" method="POST" style="display:inline;">
-                            <input type="hidden" name="postId" value="<%= post._id %>">
-                            <button type="submit" class="btn-delete">Delete</button>
+                        <form action="/deletePost" method="POST" style="display:inline;" 
+                            onsubmit="return confirm('Are you sure you want to delete this post? This action cannot be undone.');">
+                                <input type="hidden" name="postId" value="<%= post._id %>">
+                                <button type="submit" class="btn-delete">Delete</button>
                         </form>
                     <% } %>
                 </div>
