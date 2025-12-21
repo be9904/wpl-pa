@@ -46,16 +46,22 @@ async function toggleLike(postId) {
         if (data.success) {
             const btn = document.getElementById(`btn-like-${postId}`);
             const countSpan = document.getElementById(`count-${postId}`);
-
-            // Update the number
+            
             countSpan.innerText = data.likes;
 
+            // Find the <i> tag inside the button
+            const icon = btn.querySelector('i');
+
             if (data.isLiked) {
-                btn.classList.add('liked'); 
-                btn.childNodes[0].nodeValue = '♥ Liked ('; 
+                btn.classList.add('liked');
+                // Switch to Solid Heart
+                icon.classList.remove('fa-regular');
+                icon.classList.add('fa-solid');
             } else {
-                btn.classList.remove('liked'); 
-                btn.childNodes[0].nodeValue = '♡ Like (';
+                btn.classList.remove('liked');
+                // Switch to Outline Heart
+                icon.classList.remove('fa-solid');
+                icon.classList.add('fa-regular');
             }
         } else {
             console.error('Like failed:', data.error);

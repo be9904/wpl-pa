@@ -181,6 +181,10 @@ button.btn-like {
     line-height: 1.2;
     transition: all 0.2s ease;     /* Smooth transition */
 }
+button.btn-like i {
+    margin-right: 4px; /* Space between heart and number */
+    font-size: 1.1em;  /* Make the heart slightly larger if you want */
+}
 
 /* Hovering over Not Liked */
 button.btn-like:hover {

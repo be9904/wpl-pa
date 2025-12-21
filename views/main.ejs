@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main Feed - SNS App</title>
     <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="/script.js" defer></script>
 </head>
 <body>
@@ -45,8 +46,8 @@
                         id="btn-like-<%= post._id %>"
                         onclick="toggleLike('<%= post._id %>')"
                     >
-                        <%= post.likedBy.includes(user.id) ? '♥ Liked' : '♡ Like' %> 
-                        (<span id="count-<%= post._id %>"><%= post.likes %></span>)
+                        <i class="<%= post.likedBy.includes(user.id) ? 'fa-solid' : 'fa-regular' %> fa-heart"></i>
+                        <span id="count-<%= post._id %>"><%= post.likes %></span>
                     </button>
 
                     <% if (user.id === post.author || user.roles.includes('admin')) { %>
