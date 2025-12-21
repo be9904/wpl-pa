@@ -50,15 +50,11 @@ async function toggleLike(postId) {
             // Update the number
             countSpan.innerText = data.likes;
 
-            // Update the button style
             if (data.isLiked) {
-                btn.style.backgroundColor = '#007BFF';
-                btn.style.color = 'white';
-                // Replace the heart icon text while keeping the span
-                btn.childNodes[0].nodeValue = '♥ Like ('; 
+                btn.classList.add('liked'); 
+                btn.childNodes[0].nodeValue = '♥ Liked ('; 
             } else {
-                btn.style.backgroundColor = '';
-                btn.style.color = '';
+                btn.classList.remove('liked'); 
                 btn.childNodes[0].nodeValue = '♡ Like (';
             }
         } else {

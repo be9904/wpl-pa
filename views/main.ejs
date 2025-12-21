@@ -34,25 +34,23 @@
                 <div class="post-content <%= isLong ? 'collapsed' : '' %>" id="content-<%= post._id %>"><%= post.content %></div>
 
                 <% if (isLong) { %>
-                    <button class="btn-toggle-view" onclick="togglePost('<%= post._id %>', this)">
+                    <button class="btn-toggle-view">
                         Show more
                     </button>
                 <% } %>
 
                 <div class="post-actions">
                     <button 
-                        class="btn-like" 
+                        class="btn-like <%= post.likedBy.includes(user.id) ? 'liked' : '' %>" 
                         id="btn-like-<%= post._id %>"
                         onclick="toggleLike('<%= post._id %>')"
-                        style="<%= post.likedBy.includes(user.id) ? 'background-color: #007BFF; color: white;' : '' %>"
                     >
-                        <%= post.likedBy.includes(user.id) ? '♥' : '♡' %> 
-                        Like (<span id="count-<%= post._id %>"><%= post.likes %></span>)
+                        <%= post.likedBy.includes(user.id) ? '♥ Liked' : '♡ Like' %> 
+                        (<span id="count-<%= post._id %>"><%= post.likes %></span>)
                     </button>
 
                     <% if (user.id === post.author || user.roles.includes('admin')) { %>
-                        <form action="/deletePost" method="POST" style="display:inline;" 
-                            onsubmit="return confirm('Are you sure you want to delete this post? This action cannot be undone.');">
+                        <form action="/deletePost" method="POST" class="delete-form" style="display:inline;">
                                 <input type="hidden" name="postId" value="<%= post._id %>">
                                 <button type="submit" class="btn-delete">Delete</button>
                         </form>
