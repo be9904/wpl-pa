@@ -49,17 +49,14 @@ async function toggleLike(postId) {
             
             countSpan.innerText = data.likes;
 
-            // Find the <i> tag inside the button
             const icon = btn.querySelector('i');
 
             if (data.isLiked) {
                 btn.classList.add('liked');
-                // Switch to Solid Heart
                 icon.classList.remove('fa-regular');
                 icon.classList.add('fa-solid');
             } else {
                 btn.classList.remove('liked');
-                // Switch to Outline Heart
                 icon.classList.remove('fa-solid');
                 icon.classList.add('fa-regular');
             }

@@ -23,15 +23,20 @@ mongoose.connect('mongodb://127.0.0.1:27017/nodejs')
     .then(() => console.log('Connected to MongoDB: nodejs'))
     .catch(err => console.error(err));
 
-// controllers [cite: 48]
-
 const signupUser = async (req, res) => {
     const { username, password, confirmPassword } = req.body;
 
+    // 1. NEW CHECK: Disallow whitespaces in ID or Password
+    if (/\s/.test(username) || /\s/.test(password)) {
+        return res.render('signup', { error: 'Username and password cannot contain spaces.' });
+    }
+
+    // 2. Existing check for 'admin'
     if (username.toLowerCase() === 'admin') {
         return res.render('signup', { error: 'You cannot use "admin" as a username.' });
     }
 
+    // 3. Existing password match check
     if (password !== confirmPassword) {
         return res.render('signup', { error: 'Passwords do not match' });
     }
