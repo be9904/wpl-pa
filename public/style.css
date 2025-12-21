@@ -120,6 +120,13 @@ button:hover {
     font-size: 1.1em;
     margin-bottom: 15px;
     line-height: 1.5;
+    white-space: pre-wrap;
+}
+.post-content.collapsed {
+    display: -webkit-box;
+    -webkit-line-clamp: 5;       /* Limit to 5 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;            /* Hide the rest */
 }
 
 .post-actions {
@@ -127,6 +134,21 @@ button:hover {
     align-items: center;
     justify-content: space-between; 
     margin-top: 15px;               
+}
+
+.btn-toggle-view {
+    background: none;
+    border: none;
+    color: #007BFF;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 15px;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+.btn-toggle-view:hover {
+    text-decoration: underline;
 }
 
 button.btn-like {

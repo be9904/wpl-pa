@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main Feed - SNS App</title>
     <link rel="stylesheet" href="/style.css">
+    <script src="/script.js" defer></script>
 </head>
 <body>
     <h1>Welcome, <%= user.id %></h1>
@@ -26,9 +27,17 @@
                     <span><%= new Date(post.createdAt).toLocaleString() %></span>
                 </div>
 
-                <div class="post-content">
-                    <%= post.content %>
-                </div>
+                <% 
+                    const isLong = post.content.split('\n').length > 5 || post.content.length > 300; 
+                %>
+
+                <div class="post-content <%= isLong ? 'collapsed' : '' %>" id="content-<%= post._id %>"><%= post.content %></div>
+
+                <% if (isLong) { %>
+                    <button class="btn-toggle-view" onclick="togglePost('<%= post._id %>', this)">
+                        Show more
+                    </button>
+                <% } %>
 
                 <div class="post-actions">
                     <form action="/likePost" method="POST" style="display:inline;">
