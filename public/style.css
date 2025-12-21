@@ -92,6 +92,9 @@ button:hover {
     text-decoration: none;
     font-weight: bold;
 }
+.nav a:hover {
+    text-decoration: underline;
+}
 .nav-link {
     font-weight: bold;
     text-decoration: none;
@@ -124,9 +127,10 @@ button:hover {
 }
 .post-content.collapsed {
     display: -webkit-box;
-    -webkit-line-clamp: 5;       /* Limit to 5 lines */
+    line-clamp: 5;
+    -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
-    overflow: hidden;            /* Hide the rest */
+    overflow: hidden;            
 }
 
 .post-actions {
@@ -136,27 +140,51 @@ button:hover {
     margin-top: 15px;               
 }
 
-.btn-toggle-view {
-    background: none;
+button.btn-toggle-view {
+    background: transparent;
     border: none;
-    color: #007BFF;
-    cursor: pointer;
     padding: 0;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin-top: 8px; 
     margin-bottom: 15px;
     font-size: 0.9em;
     font-weight: bold;
+    color: #007BFF; 
+    text-decoration: none;
+    outline: none;
+    user-select: none;
+    -webkit-user-select: none;
 }
-
-.btn-toggle-view:hover {
+button.btn-toggle-view:focus,
+button.btn-toggle-view:active {
+    background: transparent;
+    color: #007BFF;
+    text-decoration: none; 
+    outline: none;
+    box-shadow: none;
+}
+button.btn-toggle-view:hover {
+    background: transparent;
+    color: #007BFF;       
     text-decoration: underline;
 }
 
 button.btn-like {
     background-color: #e7f3ff;
     color: #007BFF;
-    border: 1px solid #007BFF;
+    border: 1px solid #007BFF; 
     padding: 5px 10px;
-    margin-top: 0; 
+    margin-top: 0;
+    line-height: 1.2; 
+}
+
+button.btn-like.liked {
+    background-color: #007BFF;
+    color: white;
+    border: 1px solid #007BFF; 
 }
 
 button.btn-delete {
