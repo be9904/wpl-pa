@@ -1,5 +1,3 @@
-/* public/script.js */
-
 document.addEventListener('DOMContentLoaded', () => {
 
     /* --- 1. Delete Confirmation --- */
@@ -32,3 +30,42 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 });
+
+async function toggleLike(postId) {
+    try {
+        const response = await fetch('/likePost', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ postId: postId })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            const btn = document.getElementById(`btn-like-${postId}`);
+            const countSpan = document.getElementById(`count-${postId}`);
+
+            // Update the number
+            countSpan.innerText = data.likes;
+
+            // Update the button style
+            if (data.isLiked) {
+                btn.style.backgroundColor = '#007BFF';
+                btn.style.color = 'white';
+                // Replace the heart icon text while keeping the span
+                btn.childNodes[0].nodeValue = '♥ Like ('; 
+            } else {
+                btn.style.backgroundColor = '';
+                btn.style.color = '';
+                btn.childNodes[0].nodeValue = '♡ Like (';
+            }
+        } else {
+            console.error('Like failed:', data.error);
+            if(data.error === 'Unauthorized') window.location.href = '/login';
+        }
+    } catch (err) {
+        console.error('Error:', err);
+    }
+}

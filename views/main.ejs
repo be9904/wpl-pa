@@ -40,19 +40,15 @@
                 <% } %>
 
                 <div class="post-actions">
-                    <form action="/likePost" method="POST" style="display:inline;">
-                        <input type="hidden" name="postId" value="<%= post._id %>">
-                        
-                        <% if (post.likedBy.includes(user.id)) { %>
-                            <button type="submit" class="btn-like" style="background-color: #007BFF; color: white;">
-                                ♥ Liked (<%= post.likes %>)
-                            </button>
-                        <% } else { %>
-                            <button type="submit" class="btn-like">
-                                ♡ Like (<%= post.likes %>)
-                            </button>
-                        <% } %>
-                    </form>
+                    <button 
+                        class="btn-like" 
+                        id="btn-like-<%= post._id %>"
+                        onclick="toggleLike('<%= post._id %>')"
+                        style="<%= post.likedBy.includes(user.id) ? 'background-color: #007BFF; color: white;' : '' %>"
+                    >
+                        <%= post.likedBy.includes(user.id) ? '♥' : '♡' %> 
+                        Like (<span id="count-<%= post._id %>"><%= post.likes %></span>)
+                    </button>
 
                     <% if (user.id === post.author || user.roles.includes('admin')) { %>
                         <form action="/deletePost" method="POST" style="display:inline;" 

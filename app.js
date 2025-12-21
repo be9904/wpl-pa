@@ -10,6 +10,7 @@ const app = express();
 // middleware
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true })); // parse form data
+app.use(express.json());
 app.use(express.static('public'));
 app.use(session({
     secret: 'secret_key', // change this
@@ -163,38 +164,43 @@ const getPosts = async (req, res) => {
 const likePost = async (req, res) => {
     // 1. Authentication Check
     if (!req.session.user) {
-        return res.redirect('/login');
+        return res.status(401).json({ error: 'Unauthorized' });
     }
 
     const { postId } = req.body;
     const userId = req.session.user.id;
 
     try {
-        // 2. Find the post first to check our new list
         const post = await Post.findById(postId);
+        if (!post) return res.status(404).json({ error: 'Post not found' });
+
+        let updatedPost;
 
         // 3. Toggle Logic
         if (post.likedBy.includes(userId)) {
-            // CASE: UNLIKE
-            // Remove user from array AND decrement count
-            await Post.findByIdAndUpdate(postId, { 
+            // UNLIKE: Remove user, decrement count
+            updatedPost = await Post.findByIdAndUpdate(postId, { 
                 $pull: { likedBy: userId },
                 $inc: { likes: -1 }
-            });
+            }, { new: true }); // {new: true} returns the updated document
         } else {
-            // CASE: LIKE
-            // Add user to array AND increment count
-            await Post.findByIdAndUpdate(postId, { 
+            // LIKE: Add user, increment count
+            updatedPost = await Post.findByIdAndUpdate(postId, { 
                 $addToSet: { likedBy: userId },
                 $inc: { likes: 1 }
-            });
+            }, { new: true });
         }
 
-        res.redirect('/');
+        // Return JSON instead of redirecting
+        res.json({ 
+            success: true, 
+            likes: updatedPost.likes, 
+            isLiked: updatedPost.likedBy.includes(userId) 
+        });
 
     } catch (err) {
         console.error(err);
-        res.redirect('/');
+        res.status(500).json({ error: 'Server error' });
     }
 };
 
