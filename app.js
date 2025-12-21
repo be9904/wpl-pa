@@ -27,33 +27,29 @@ mongoose.connect('mongodb://127.0.0.1:27017/nodejs')
 const signupUser = async (req, res) => {
     const { username, password, confirmPassword } = req.body;
 
-    // 1. Basic Validation: Check if passwords match (from Section 3.2 requirements)
+    if (username.toLowerCase() === 'admin') {
+        return res.render('signup', { error: 'You cannot use "admin" as a username.' });
+    }
+
     if (password !== confirmPassword) {
         return res.render('signup', { error: 'Passwords do not match' });
     }
 
     try {
-        // 2. Uniqueness Validation: Check if user already exists
-        // We query the 'id' field because that is what your Model uses for the username
         const existingUser = await User.findOne({ id: username });
-
         if (existingUser) {
             return res.render('signup', { error: 'Username is already taken' });
         }
 
-        // 3. Password Hashing: Secure the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // 4. Create User: Save to database
         const newUser = new User({
-            id: username,             // Map form 'username' to DB 'id'
-            password: hashedPassword, // Store the hash, not plain text
-            roles: ['user']           // Default role
+            id: username,
+            password: hashedPassword,
+            roles: ['user'] 
         });
 
         await newUser.save();
-
-        // 5. Success: Redirect to login
         res.redirect('/login');
 
     } catch (err) {
@@ -203,35 +199,20 @@ const likePost = async (req, res) => {
 };
 
 const deletePost = async (req, res) => {
-    // 1. Authentication Check
-    if (!req.session.user) {
-        return res.redirect('/login');
-    }
+    if (!req.session.user) return res.redirect('/login');
 
     const { postId } = req.body;
     const currentUser = req.session.user;
 
     try {
-        // 2. Find the post to verify ownership
         const post = await Post.findById(postId);
-
-        if (!post) {
-            // If post doesn't exist (maybe already deleted), just redirect
-            return res.redirect('/');
-        }
-
-        // 3. Authorization Check: Is user the author OR an admin?
+        if (!post) return res.redirect('/');
+        
         if (post.author === currentUser.id || currentUser.roles.includes('admin')) {
-            // 4. Delete the post
             await Post.findByIdAndDelete(postId);
-        } else {
-            // Optional: You could log unauthorized attempts here
-            console.log("Unauthorized delete attempt by " + currentUser.id);
         }
 
-        // 5. Redirect back to main page
         res.redirect('/');
-
     } catch (err) {
         console.error(err);
         res.redirect('/');
