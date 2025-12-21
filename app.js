@@ -10,6 +10,7 @@ const app = express();
 // middleware
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true })); // parse form data
+app.use(express.static('public'));
 app.use(session({
     secret: 'secret_key', // change this
     resave: false,
@@ -163,6 +164,44 @@ const getPosts = async (req, res) => {
     }
 };
 
+const likePost = async (req, res) => {
+    // 1. Authentication Check
+    if (!req.session.user) {
+        return res.redirect('/login');
+    }
+
+    const { postId } = req.body;
+    const userId = req.session.user.id;
+
+    try {
+        // 2. Find the post first to check our new list
+        const post = await Post.findById(postId);
+
+        // 3. Toggle Logic
+        if (post.likedBy.includes(userId)) {
+            // CASE: UNLIKE
+            // Remove user from array AND decrement count
+            await Post.findByIdAndUpdate(postId, { 
+                $pull: { likedBy: userId },
+                $inc: { likes: -1 }
+            });
+        } else {
+            // CASE: LIKE
+            // Add user to array AND increment count
+            await Post.findByIdAndUpdate(postId, { 
+                $addToSet: { likedBy: userId },
+                $inc: { likes: 1 }
+            });
+        }
+
+        res.redirect('/');
+
+    } catch (err) {
+        console.error(err);
+        res.redirect('/');
+    }
+};
+
 const deletePost = async (req, res) => {
     // 1. Authentication Check
     if (!req.session.user) {
@@ -215,6 +254,7 @@ app.post('/signup', signupUser);
 app.post('/login', loginUser);
 app.get('/logout', logoutUser); // usually a link or button
 app.post('/createPost', createPost);
+app.post('/likePost', likePost);
 app.post('/deletePost', deletePost);
 
 // start server

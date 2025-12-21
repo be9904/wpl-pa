@@ -1,0 +1,126 @@
+body {
+    font-family: sans-serif;
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background-color: white; /* Explicit requirement */
+    color: black;
+}
+
+a {
+    color: #007BFF;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+h1, h2 {
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+/* --- Forms (Login, Signup, New Post) --- */
+label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+input, textarea {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+textarea {
+    height: 150px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+button {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* --- Error Indicators --- */
+.error, .error-indicator {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+/* --- Main Feed Specifics --- */
+.nav {
+    margin-bottom: 20px;
+}
+.nav a {
+    margin-right: 15px;
+    font-weight: bold;
+}
+
+.post {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    color: #555;
+    font-size: 0.9em;
+}
+
+.post-content {
+    font-size: 1.1em;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.post-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* <--- This pushes Delete to the right */
+    margin-top: 15px;               /* Add some spacing from the text */
+}
+
+/* Specific Button Styles */
+button.btn-like {
+    background-color: #e7f3ff;
+    color: #007BFF;
+    border: 1px solid #007BFF;
+    padding: 5px 10px;
+    margin-top: 0; /* Reset global margin */
+}
+
+button.btn-delete {
+    background-color: #ffe6e6;
+    color: #d8000c;
+    border: 1px solid #d8000c;
+    padding: 5px 10px;
+    margin-top: 0; /* Reset global margin */
+}
