@@ -173,35 +173,30 @@ button.btn-toggle-view:hover {
 }
 
 button.btn-like {
-    background-color: transparent; /* Or #f8f9fa for light grey */
-    color: #007BFF;                /* Blue text */
-    border: 1px solid #007BFF;     /* Blue border */
+    background-color: transparent;
+    color: #007BFF;              
+    border: 1px solid #007BFF;   
     padding: 5px 10px;
     margin-top: 0;
     line-height: 1.2;
-    transition: all 0.2s ease;     /* Smooth transition */
+    transition: all 0.2s ease;    
 }
 button.btn-like i {
-    margin-right: 4px; /* Space between heart and number */
-    font-size: 1.1em;  /* Make the heart slightly larger if you want */
+    margin-right: 4px;
+    font-size: 1.1em; 
 }
-
-/* Hovering over Not Liked */
 button.btn-like:hover {
-    background-color: #e7f3ff;     /* Very light blue on hover */
+    background-color: #e7f3ff;
     color: #0056b3;
 }
 
-/* State 2: Liked (Solid Blue) */
 button.btn-like.liked {
     background-color: #007BFF;
     color: white;
     border: 1px solid #007BFF;
 }
-
-/* Hovering over Liked */
 button.btn-like.liked:hover {
-    background-color: #0056b3;     /* Darker blue */
+    background-color: #0056b3;
     border-color: #0056b3;
 }
 

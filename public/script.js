@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    /* --- 1. Delete Confirmation --- */
+    // confirm delete
     const deleteForms = document.querySelectorAll('.delete-form');
     deleteForms.forEach(form => {
         form.addEventListener('submit', (e) => {
@@ -10,12 +10,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    /* --- 2. Show More / Show Less --- */
+    // show more/less in post
     document.addEventListener('click', (e) => {
-        // Only run if the clicked element is a toggle button
+        // only run if the clicked element is a toggle button
         if (e.target && e.target.classList.contains('btn-toggle-view')) {
             const button = e.target;
-            const contentDiv = button.previousElementSibling; // The div right before the button
+            const contentDiv = button.previousElementSibling; // div right before button
 
             if (contentDiv && contentDiv.classList.contains('post-content')) {
                 if (contentDiv.classList.contains('collapsed')) {
@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
+// prevents the refreshing the page after clicking on like
 async function toggleLike(postId) {
     try {
         const response = await fetch('/likePost', {

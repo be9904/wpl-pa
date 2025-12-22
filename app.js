@@ -7,18 +7,22 @@ const Post = require('./models/post');
 
 const app = express();
 
+////////////////////////////////////////
 // middleware
+////////////////////////////////////////
 app.set('view engine', 'ejs');
-app.use(express.urlencoded({ extended: true })); // parse form data
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
 app.use(session({
-    secret: 'secret_key', // change this
+    secret: 'secret_key', // load session id from env
     resave: false,
     saveUninitialized: false
 }));
 
+////////////////////////////////////////
 // database connection
+////////////////////////////////////////
 mongoose.connect('mongodb://127.0.0.1:27017/nodejs')
     .then(() => console.log('Connected to MongoDB: nodejs'))
     .catch(err => console.error(err));
@@ -26,17 +30,17 @@ mongoose.connect('mongodb://127.0.0.1:27017/nodejs')
 const signupUser = async (req, res) => {
     const { username, password, confirmPassword } = req.body;
 
-    // 1. NEW CHECK: Disallow whitespaces in ID or Password
+    // don't allow whitespaces in id or pw
     if (/\s/.test(username) || /\s/.test(password)) {
         return res.render('signup', { error: 'Username and password cannot contain spaces.' });
     }
 
-    // 2. Existing check for 'admin'
+    // check if admin exists
     if (username.toLowerCase() === 'admin') {
         return res.render('signup', { error: 'You cannot use "admin" as a username.' });
     }
 
-    // 3. Existing password match check
+    // check if pw matches
     if (password !== confirmPassword) {
         return res.render('signup', { error: 'Passwords do not match' });
     }
@@ -44,12 +48,12 @@ const signupUser = async (req, res) => {
     try {
         const existingUser = await User.findOne({ id: username });
         if (existingUser) {
-            return res.render('signup', { error: 'Username is already taken' });
+            return res.render('signup', { error: 'Username is already taken' }); // error if username exists in db
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password, 10); // hash pw
 
-        const newUser = new User({
+        const newUser = new User({ // new entry on signup success
             id: username,
             password: hashedPassword,
             roles: ['user'] 
@@ -58,7 +62,7 @@ const signupUser = async (req, res) => {
         await newUser.save();
         res.redirect('/login');
 
-    } catch (err) {
+    } catch (err) { // throw error if no response or false response from server
         console.error(err);
         res.render('signup', { error: 'Server error, please try again.' });
     }
@@ -68,62 +72,66 @@ const loginUser = async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        // 1. Find the user by ID (username)
+        // find the user by id
         const user = await User.findOne({ id: username });
 
-        // 2. Validate: If user not found, return error
+        // valdiation
+        // if user is not found, return error
         if (!user) {
             return res.render('login', { error: 'Invalid username or password' });
         }
 
-        // 3. Validate: Compare provided password with stored hash
+        // compare pw with stored hash
         const isMatch = await bcrypt.compare(password, user.password);
         
         if (!isMatch) {
             return res.render('login', { error: 'Invalid username or password' });
         }
 
-        // 4. Session Management: Initialize session upon successful login
-        // We store the ID and Roles so we can use them in the views later
+        // init session on login success
+        // store id and roles to use later in views
         req.session.user = {
             id: user.id,
             roles: user.roles
         };
 
-        // 5. Success: Redirect to main feed
+        // redirect to main feed
         res.redirect('/');
 
-    } catch (err) {
+    } catch (err) { // throw error if no response or false response from server
         console.error(err);
         res.render('login', { error: 'Server error during login.' });
     }
 };
 
 const logoutUser = (req, res) => {
-    // 1. Handle user logout by destroying the session
+    // handle user logout by destroying the session
     req.session.destroy((err) => {
         if (err) {
             console.log(err);
             return res.redirect('/');
         }
-        // 2. Redirect to login page after logout
+        // redirect to login page after logout
         res.redirect('/login');
     });
 };
 
+////////////////////////////////////////
 // post controllers
+////////////////////////////////////////
 const createPost = async (req, res) => {
-    // 1. Authentication Check: Ensure user is logged in
+    // authentication check
+    // check if user is logged in
     if (!req.session.user) {
         return res.redirect('/login');
     }
 
     try {
-        // 2. Data Preparation: Get content and author
+        // get content and author
         const { content } = req.body;
-        const author = req.session.user.id; // Get ID from the active session
+        const author = req.session.user.id; // get id from the active session
 
-        // 3. Create Post: Initialize the new post document
+        // init new post document
         const newPost = new Post({
             author: author,
             content: content,
@@ -131,43 +139,43 @@ const createPost = async (req, res) => {
             // createdAt: defaults to Date.now (defined in Model)
         });
 
-        // 4. Save to Database
+        // save to db
         await newPost.save();
 
-        // 5. Redirect: Go back to the main feed
+        // redirect to main feed
         res.redirect('/');
 
     } catch (err) {
+        // reload page on error
         console.error(err);
-        // On error, reload the page (or you could render with an error message)
         res.redirect('/newpost');
     }
 };
 
 const getPosts = async (req, res) => {
-    // 1. Authentication Check
+    // authentication check
     if (!req.session.user) {
         return res.redirect('/login');
     }
 
     try {
-        // 2. Fetch Posts: Find all posts and sort them by date (Newest first)
+        // fetch all posts and sort them in chronological order
         const posts = await Post.find().sort({ createdAt: -1 });
 
-        // 3. Render View: Pass the user info and the list of posts to the template
+        // pass the user info and the list of posts to render view
         res.render('main', { 
             user: req.session.user, 
             posts: posts 
         });
 
-    } catch (err) {
+    } catch (err) { // throw error fetching posts fails
         console.error(err);
         res.status(500).send("Error fetching posts");
     }
 };
 
 const likePost = async (req, res) => {
-    // 1. Authentication Check
+    // authentication check
     if (!req.session.user) {
         return res.status(401).json({ error: 'Unauthorized' });
     }
@@ -181,29 +189,30 @@ const likePost = async (req, res) => {
 
         let updatedPost;
 
-        // 3. Toggle Logic
+        // toggle like
         if (post.likedBy.includes(userId)) {
-            // UNLIKE: Remove user, decrement count
+            // unlike -> remove user, decrement count
             updatedPost = await Post.findByIdAndUpdate(postId, { 
                 $pull: { likedBy: userId },
                 $inc: { likes: -1 }
-            }, { new: true }); // {new: true} returns the updated document
+            }, { new: true });
         } else {
-            // LIKE: Add user, increment count
+            // like -> add user, increment count
             updatedPost = await Post.findByIdAndUpdate(postId, { 
                 $addToSet: { likedBy: userId },
                 $inc: { likes: 1 }
             }, { new: true });
         }
 
-        // Return JSON instead of redirecting
+        // return json
+        // no redirection here -> handled with async function in /public/script.js
         res.json({ 
             success: true, 
             likes: updatedPost.likes, 
             isLiked: updatedPost.likedBy.includes(userId) 
         });
 
-    } catch (err) {
+    } catch (err) { // throw error if no response or false response from server
         console.error(err);
         res.status(500).json({ error: 'Server error' });
     }
@@ -224,13 +233,15 @@ const deletePost = async (req, res) => {
         }
 
         res.redirect('/');
-    } catch (err) {
+    } catch (err) { // throw error if no response or false response from server
         console.error(err);
         res.redirect('/');
     }
 };
 
-// Routes
+////////////////////////////////////////
+// routes
+////////////////////////////////////////
 
 // page renders
 app.get('/login', (req, res) => res.render('login'));
