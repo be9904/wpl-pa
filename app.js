@@ -4,6 +4,7 @@ const session = require('express-session');
 const bcrypt = require('bcrypt');
 const User = require('./models/user');
 const Post = require('./models/post');
+const dotenv = require('dotenv').config();
 
 const app = express();
 
@@ -15,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
 app.use(session({
-    secret: 'secret_key', // load session id from env
+    secret: process.env.SESSION_SECRET, // load session id from env
     resave: false,
     saveUninitialized: false
 }));
@@ -23,8 +24,8 @@ app.use(session({
 ////////////////////////////////////////
 // database connection
 ////////////////////////////////////////
-mongoose.connect('mongodb://127.0.0.1:27017/nodejs')
-    .then(() => console.log('Connected to MongoDB: nodejs'))
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error(err));
 
 const signupUser = async (req, res) => {
@@ -261,7 +262,7 @@ app.post('/likePost', likePost);
 app.post('/deletePost', deletePost);
 
 // start server
-app.listen(3000, () => {
-    console.log('Server running on port 3000');
-    console.log("127.0.0.1:3000");
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
