@@ -223,8 +223,11 @@ The script implements four key steps required to safely create the admin user:
   <img src="/imgs/admincli.png" width="40%" height="40%">
  </p>
  <p align="center">
+<p align="center"><b><i>Adding admin account to DB via createAdmin.js</i></b></p>
+
+<p align="center">
   <img src="/imgs/dbadmin.png" width="40%" height="40%">
  </p>
-<p align="center"><b><i>Adding admin account to DB</i></b></p>
+<p align="center"><b><i>Admin account successfully added to DB</i></b></p>
 
 The script executes immediately upon running, prompting the user for credentials only after a successful database connection is confirmed.
