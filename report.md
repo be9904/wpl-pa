@@ -16,16 +16,15 @@ This is the structure of the project.
 |   └── signup.ejs
 ├── app.js
 ├── createAdmin.js
-└── .env
+└── .env.example
 ```
+`.env.example` needs to be renamed to `.env` and `SESSION_SECRET` should be replaced with a random secure string.
 
 ## Models
 
 ##### 1. post.js
 
-This file defines the post model. It is the schema for all user-generated posts stored in the MongoDB database.
-
-The schema specifies five key fields required for the posting and social interaction functionality.
+This file defines the post model. It is the schema for all user-generated posts stored in the MongoDB database. The schema specifies five key fields required for the posting and social interaction functionality.
 
 * **author** (String, Required): This field stores the unique identifier of the user who created the post. It is marked as required to ensure no anonymous posts can be created.
 * **content** (String, Required): This holds the text contents of the post. It is also mandatory to prevent empty posts being sent to the database.
@@ -42,9 +41,7 @@ The schema is compiled into a Mongoose Model via `mongoose.model('Post', postSch
 
 ##### 2. user.js
 
-This file defines the user model. It is the schema for all registered users stored in the MongoDB database, handling authentication and authorization data.
-
-The schema specifies three key fields required for user management.
+This file defines the user model. It is the schema for all registered users stored in the MongoDB database, handling authentication and authorization data. The schema specifies three key fields required for user management.
 
 * **id** (String, Required, Unique): This field serves as the unique username for the user. It is marked as unique to prevent multiple users from registering with the same identifier, ensuring reliable account retrieval.
 * **password** (String, Required): This stores the user's password. It is intended to hold a hashed string (using bcrypt) rather than plain text, ensuring security for user credentials.
